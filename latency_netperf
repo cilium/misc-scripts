@@ -1,0 +1,20 @@
+#!/bin/bash
+# Orig author: Daniel Borkmann <daniel@iogearbox.net>
+# Version 1.0.0
+#
+# This script starts one TCP netperf session and prints latency
+# (avg, mean, stdev, min, p50, p90, p99) and transaction rates.
+# It stops once confidence level 99% and width of confidence
+# interval of 1% has been reached.
+#
+# Usage: latency_netperf HOSTIP TEST
+#
+#   HOSTIP - Specifies the remote host IP where netserver is running.
+#   TEST   - The test to execute, supported is either 'CRR' or 'RR'.
+#
+#  Depends on a netperf version with option "-s" support, as this
+#  script uses this option, to wait 2 sec before starting the test run.
+
+REMOTE_HOSTIP=$1
+TCP_TEST=$2
+nice -20 netperf -H $REMOTE_HOSTIP -t TCP_$TCP_TEST -T0,0 -j -P0 -s2 -I99,1 -- -k "RT_LATENCY,MEAN_LATENCY,STDDEV_LATENCY,MIN_LATENCY,P50_LATENCY,P90_LATENCY,P99_LATENCY,DIRECTION,LOCAL_CPU_BIND,REMOTE_CPU_BIND,LOCAL_TRANSPORT_RETRANS,REMOTE_TRANSPORT_RETRANS,REQUEST_SIZE,RESPONSE_SIZE,TRANSACTION_RATE"
