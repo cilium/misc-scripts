@@ -22,4 +22,6 @@ RUN											   \
 	apk del build-base texinfo git automake libtool intltool autoconf		&& \
 	rm -rf /var/cache/apk/*
 
+EXPOSE 12865
+
 CMD ["/usr/bin/netserver", "-D"]
